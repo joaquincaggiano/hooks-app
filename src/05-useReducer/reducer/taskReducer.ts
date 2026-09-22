@@ -29,6 +29,12 @@ const getTodosStats = (todos: Todo[]) => {
 };
 
 export const getTaskInitialState = (): TaskState => {
+  const localStorageState = localStorage.getItem("tasks-state");
+
+  if (localStorageState) {
+    return JSON.parse(localStorageState);
+  }
+
   return {
     todos: [],
     length: 0,
