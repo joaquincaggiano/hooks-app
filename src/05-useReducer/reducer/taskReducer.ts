@@ -1,4 +1,8 @@
-import type { Todo } from "../TaskApp";
+interface Todo {
+  id: number;
+  text: string;
+  completed: boolean;
+}
 
 interface TaskState {
   todos: Todo[];
@@ -21,6 +25,15 @@ const getTodosStats = (todos: Todo[]) => {
     length: todosLength,
     completed,
     pending,
+  };
+};
+
+export const getTaskInitialState = (): TaskState => {
+  return {
+    todos: [],
+    length: 0,
+    completed: 0,
+    pending: 0,
   };
 };
 
