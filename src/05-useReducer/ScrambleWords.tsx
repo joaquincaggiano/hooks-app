@@ -27,7 +27,7 @@ const GAME_WORDS = [
 
 // Esta función mezcla el arreglo para que siempre sea aleatorio
 const shuffleArray = (array: string[]) => {
-  return array.sort(() => Math.random() - 0.5);
+  return [...array].sort(() => Math.random() - 0.5);
 };
 
 // Esta función mezcla las letras de la palabra
@@ -39,7 +39,7 @@ const scrambleWord = (word: string = "") => {
 };
 
 export const ScrambleWords = () => {
-  const [words, setWords] = useState(shuffleArray(GAME_WORDS));
+  const [words, setWords] = useState(() => shuffleArray(GAME_WORDS));
 
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [scrambledWord, setScrambledWord] = useState(scrambleWord(currentWord));
@@ -74,14 +74,16 @@ export const ScrambleWords = () => {
       setCurrentWord(newWords[0]);
       setScrambledWord(scrambleWord(newWords[0]));
 
-      if (errorCounter + 1 === maxAllowErrors) {
-        setIsGameOver(true);
-      }
-
       return;
     }
 
     setErrorCounter(errorCounter + 1);
+
+    if (errorCounter + 1 === maxAllowErrors) {
+      setIsGameOver(true);
+      return;
+    }
+
     setGuess("");
     return;
   };
@@ -91,7 +93,7 @@ export const ScrambleWords = () => {
       return;
     }
 
-    const updatedWords = words.splice(1);
+    const updatedWords = words.slice(1);
     setSkipCounter(skipCounter + 1);
     setWords(updatedWords);
     setCurrentWord(updatedWords[0]);
