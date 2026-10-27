@@ -1,4 +1,4 @@
-import { useOptimistic, useState } from "react";
+import { useOptimistic, useState, useTransition } from "react";
 
 interface Comment {
   id: number;
@@ -7,6 +7,8 @@ interface Comment {
 }
 
 export const InstagromApp = () => {
+  const [isPending, startTransition] = useTransition();
+
   const [comments, setComments] = useState<Comment[]>([
     { id: 1, text: "¡Gran foto!" },
     { id: 2, text: "Me encanta 🧡" },
@@ -28,15 +30,17 @@ export const InstagromApp = () => {
 
   const handleAddComment = async (formData: FormData) => {
     const newComment = formData.get("post-message") as string;
-    
+
     addOptimisticComments(newComment);
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    startTransition(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    setComments((prevComments) => [
-      ...prevComments,
-      { id: prevComments.length + 1, text: newComment },
-    ]);
+      setComments((prevComments) => [
+        ...prevComments,
+        { id: prevComments.length + 1, text: newComment },
+      ]);
+    });
   };
 
   return (
@@ -83,7 +87,7 @@ export const InstagromApp = () => {
           />
           <button
             type="submit"
-            disabled={false}
+            disabled={isPending}
             className="w-full rounded-md bg-blue-500 p-2 text-white cursor-pointer"
           >
             Enviar
