@@ -1,4 +1,5 @@
 import { useOptimistic, useState, useTransition } from "react";
+// import { toast } from "sonner";
 
 interface Comment {
   id: number;
@@ -40,6 +41,10 @@ export const InstagromApp = () => {
         ...prevComments,
         { id: prevComments.length + 1, text: newComment },
       ]);
+
+      //! Este es código para revertir el comentario optimista si ocurre un error
+      // setComments((prevComments) => prevComments);
+      // toast.error("Error al agregar el comentario");
     });
   };
 
